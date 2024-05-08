@@ -351,7 +351,7 @@ ImageDatabase::loadCSV()
             extraFieldNames.emplace(i, std::move(fields[i]));
         }
     }
-
+    
     // Sanity check the file: we need the first four columns
     const auto validIdx = [](int idx) {
         return idx != -1;
@@ -363,15 +363,15 @@ ImageDatabase::loadCSV()
      * make sense for video-type ones.
      */
     BOB_ASSERT(validIdx(fieldNameIdx[4]) == !isVideoType());
-
+    
     // Assume it's a grid if we have any of the Grid fields...
     if (!hasMetadata()) {
-        m_IsRoute = !std::any_of(fieldNameIdx.cbegin() + 5, fieldNameIdx.cend(), validIdx);
+        m_IsRoute = !std::any_of(fieldNameIdx.cbegin() + 5, fieldNameIdx.cbegin() + 8, validIdx);
     }
 
     // ...but we require *all* Grid fields for it to be valid
     if (!m_IsRoute) {
-        BOB_ASSERT(std::all_of(fieldNameIdx.cbegin() + 5, fieldNameIdx.cend(), validIdx));
+        BOB_ASSERT(std::all_of(fieldNameIdx.cbegin() + 5, fieldNameIdx.cbegin() + 8, validIdx));
     }
 
     // Read data line by line
@@ -1000,9 +1000,9 @@ ImageDatabase::addNewEntries(std::vector<ImageDatabase::Entry> &newEntries,
 
     for (auto &e : m_Entries) {
         // These fields are always written...
-        os << e.pose.x().value() << ", " << e.pose.y().value() << ", "
-           << e.pose.z().value() << ", " << e.pose.yaw().value() << ", "
-           << e.pose.pitch().value() << ", " << e.pose.roll().value();
+        os << writePreciseString(e.pose.x().value()) << ", " << writePreciseString(e.pose.y().value()) << ", "
+           << writePreciseString(e.pose.z().value()) << ", " << writePreciseString(e.pose.yaw().value()) << ", "
+           << writePreciseString(e.pose.pitch().value()) << ", " << writePreciseString(e.pose.roll().value());
 
         // ...this is only written if we're not saving as a video
         if (!isVideoType()) {
