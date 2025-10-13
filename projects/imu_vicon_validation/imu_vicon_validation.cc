@@ -1,7 +1,7 @@
 // BoB robotics includes
 #include "common/background_exception_catcher.h"
 #include "common/bn055_imu.h"
-#include "common/circstat.h"
+#include "common/circstat.h"1
 #include "common/macros.h"
 #include "common/stopwatch.h"
 #include "hid/joystick.h"
